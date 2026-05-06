@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!-- Adicionada a namespace do Thymeleaf -->
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransCarga</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .principal {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .main {
+            width: 100%;
+            height: 90vh;
+            /* AJUSTE AQUI: Caminho da imagem considerando sua estrutura static.css/images */
+            background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.25)), url(' + @{/images/caminhao.jpg} + ');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            padding-left: 80px;
+            padding-bottom: 70px;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .text {
+            max-width: 380px;
+            color: #f8f9fa;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .text h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .text p {
+            font-size: 1.2rem;
+            line-height: 1.2;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        /* Transformado em link para navegação */
+        .btn-saiba {
+            display: inline-block;
+            text-decoration: none;
+            background: transparent;
+            color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            padding: 6px 30px;
+            border-radius: 30px;
+            font-weight: 400;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-saiba:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .footer {
+            height: 10vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 50px;
+            background-color: #ffffff;
+            border-top: 1px solid #eaeaea;
+        }
+
+        /* Transformado em link para navegação */
+        .btn-sistema {
+            display: inline-block;
+            text-decoration: none;
+            background: linear-gradient(to right, #28a745, #8bc34a);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .btn-sistema:hover {
+            background: linear-gradient(to right, #218838, #7cb342);
+            transform: translateX(-2px);
+        }
+    </style>
+</head>
+<body>
+<div class="principal">
+    <div class="main" th:style="'background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.25)), url(' + @{/images/caminhao.jpg} + ');'">
+        <div class="text">
+            <h1>TransCarga</h1>
+            <p>Cadastre e tenha mais autonomia e controle sobre os seus fretes e/ou dos seus clientes.</p>
+            <a href="#" class="btn-saiba">Saiba mais</a>
+        </div>
+    </div>
+    <div class="footer">
+        <!-- LINK PARA O SISTEMA USANDO THYMELEAF -->
+        <a th:href="@{/inicio}" class="btn-sistema">Acesse o sistema</a>
+    </div>
+</div>
+</body>
+</html>

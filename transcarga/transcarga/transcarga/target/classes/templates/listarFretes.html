@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Fretes | TransCarga</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Estrutura Principal de Vidro -->
+<div class="app-window">
+
+    <!-- Header / Menu Superior -->
+    <header class="topbar">
+        <div class="logo">
+            <div class="logo-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="white" width="20" height="20">
+                    <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="logo-name">TransCarga</div>
+                <div class="logo-sub">Sistema de Gerenciamento de Fretes</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a th:href="@{/inicio}">Início</a>
+            <a th:href="@{/fretes/cadastrar}">Cadastrar Frete</a>
+            <a th:href="@{/fretes/listar}" class="active">Listar Fretes</a>
+        </nav>
+    </header>
+
+    <!-- Área Central -->
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1>Fretes Cadastrados</h1>
+                <p th:text="'Total encontrado: ' + ${totalEncontrado} + ' frete(s)'">Total: 0</p>
+            </div>
+            <a th:href="@{/fretes/cadastrar}" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="margin-right: 8px;">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                Novo Frete
+            </a>
+        </div>
+
+        <!-- Alertas de Feedback -->
+        <div class="alert alert-success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}"></div>
+        <div class="alert alert-error" th:if="${mensagemErro}" th:text="${mensagemErro}"></div>
+
+        <!-- Filtros de busca (Glass Style) -->
+        <form th:action="@{/fretes/listar}" method="get" class="search-bar">
+            <input type="text"
+                   name="busca"
+                   class="form-input"
+                   placeholder="Buscar por destino ou transportadora..."
+                   th:value="${busca}" />
+            
+            <button type="submit" class="btn btn-secondary">Buscar</button>
+            <a th:href="@{/fretes/listar}" class="btn btn-ghost">Limpar</a>
+        </form>
+
+        <!-- Tabela de fretes -->
+        <div class="card table-card">
+            <div class="table-wrap">
+                <table th:if="${not #lists.isEmpty(fretes)}">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Destino</th>
+                        <th>Peso (kg)</th>
+                        <th>Transportadora</th>
+                        <th>Status</th>
+                        <th>Cadastrado em</th>
+                        <th>Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="frete : ${fretes}">
+                        <td class="col-id">#<span th:text="${frete.id}"></span></td>
+                        <td th:text="${frete.destino}">Destino</td>
+                        <td th:text="${#numbers.formatDecimal(frete.peso, 1, 'POINT', 1, 'COMMA')} + ' kg'">0 kg</td>
+                        <td th:text="${frete.transportadora}">Transportadora</td>
+                        <td>
+                                    <span class="badge"
+                                          th:classappend="${frete.status.name() == 'ENTREGUE'} ? 'badge-green' :
+                                                          (${frete.status.name() == 'EM_TRANSITO'} ? 'badge-blue' :
+                                                          (${frete.status.name() == 'CANCELADO'} ? 'badge-red' : 'badge-amber'))"
+                                          th:text="${frete.status.descricao}">
+                                    </span>
+                        </td>
+                        <td th:text="${frete.dataCadastroFormatada}">--/--/----</td>
+                        <td class="col-actions">
+                            <a th:href="@{/fretes/editar/{id}(id=${frete.id})}" class="btn-action edit">Editar</a>
+                            <form th:action="@{/fretes/excluir/{id}(id=${frete.id})}" method="post"
+                                  style="display:inline"
+                                  onsubmit="return confirm('Confirma a exclusão deste frete?')">
+                                <button type="submit" class="btn-action delete">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- Estado vazio -->
+                <div class="empty-state" th:if="${#lists.isEmpty(fretes)}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                        <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z"/>
+                    </svg>
+                    <p>Nenhum frete encontrado.</p>
+                    <a th:href="@{/fretes/cadastrar}" class="btn btn-primary" style="margin-top: 16px;">Cadastrar o primeiro frete</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <span>TransCarga &copy; 2024 &mdash; Arquitetura MVC com Spring Boot + JPA + MariaDB</span>
+    </footer>
+
+</div> <!-- Fim app-window -->
+
+</body>
+</html>
